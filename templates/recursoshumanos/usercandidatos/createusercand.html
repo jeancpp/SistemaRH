@@ -1,4 +1,4 @@
-{% include 'header.html' %}
+{% include 'headercandidato.html' %}
 
 
 {% with messages = get_flashed_messages() %}
@@ -13,7 +13,7 @@
 {% endif %}
 {% endwith %}
 <br> 
-<form method="post" action="/storecand" enctype="multipart/form-data">
+<form method="post" action="/storeusercand" enctype="multipart/form-data">
 
     <div class="card">
         <div class="card-header">
@@ -85,7 +85,7 @@
             
              <div class="form-group">
                 <input type="submit" class="btn btn-success" value="Agregar">
-                <a href="{{url_for('indexcand')}}" class="btn btn-primary">Regresar</a>
+                <a href="{{url_for('indexusercand')}}" class="btn btn-primary">Regresar</a>
              </div>
             </p>
         </div>

@@ -20,6 +20,57 @@ mysql.init_app(app)
 def login():
     return render_template("/login.html")
 
+@app.route('/registro')
+def registro():
+    sql="SELECT * FROM `tipousuario`"
+    conn=mysql.connect()
+    cursor=conn.connect()
+    cursor=conn.cursor(DictCursor)
+    cursor.execute(sql)
+    tipo=cursor.fetchall()
+    conn.commit()
+
+    return render_template("/registro.html", tipo = tipo)
+
+@app.route('/storeusuario', methods=['Get','POST'])
+def storeusuario():
+    _Nombre=request.form['txtnombre']
+    _Password=request.form['txtpassword']
+    _tipousuario=request.form['txttipo']
+
+    conn=mysql.connect()
+    cursor=conn.cursor(DictCursor)
+    cursor=conn.cursor()
+    cursor2=conn.cursor()
+    if _Nombre=='' or _Password=='':
+        flash('Recuerda llenar los datos de los campos')
+        return redirect(url_for('registro'))
+    
+    cursor.execute("SELECT usuarios.idusuario, usuarios.nombre, usuarios.password,tipousuario.nombretipo FROM usuarios INNER JOIN tipousuario ON usuarios.idtipo = tipousuario.idtipo WHERE usuarios.nombre='"+_Nombre+"' and password='"+_Password+"';")
+    cursor2.execute("SELECT usuarios.idusuario, usuarios.nombre, usuarios.password,tipousuario.nombretipo FROM usuarios INNER JOIN tipousuario ON usuarios.idtipo = tipousuario.idtipo WHERE usuarios.nombre='"+_Nombre+"';")
+    r=cursor.fetchall()
+    s=cursor2.fetchall()
+    count=cursor.rowcount
+    if count==1:
+        flash("Usuario ya registrado")
+        return redirect(url_for('registro'))
+
+    count=cursor2.rowcount
+    if count==1:
+        flash("Nombre de usuario ya registrado")
+        return redirect(url_for('registro'))
+
+    conn=mysql.connect()
+    cursor=conn.cursor(DictCursor)
+    cursor=conn.cursor()
+
+    sql="INSERT INTO `usuarios` (`idusuario`, `nombre`, `password`, `idtipo`) VALUES (NULL, %s, %s, %s);"
+    datos=(_Nombre, _Password, _tipousuario)
+    cursor.execute(sql,datos)
+    conn.commit()
+    return redirect(url_for('login'))
+
+
 @app.route('/inicio')
 def inicio():
     return render_template("recursoshumanos/inicio.html")
@@ -753,6 +804,269 @@ def storeexpe():
     cursor.execute(sql,datos)
     conn.commit()
     return redirect('/indexexpe')
+
+#CRUD DE CANDIDATOS (Usuario: Candidato)
+
+@app.route('/indexusercand')
+def indexusercand():
+    sql="SELECT candidatos.Idcandidato, candidatos.Cedula, candidatos.Nombre, puestos.Nombre, candidatos.Idcompetencia, candidatos.Idcapacitacion, candidatos.Salariodeseado, candidatos.Recomendado FROM candidatos INNER JOIN puestos on candidatos.Idpuesto = puestos.Idpuesto WHERE NOT EXISTS (SELECT * FROM empleados WHERE empleados.Idcandidato = candidatos.Idcandidato);"
+    conn=mysql.connect()
+    cursor=conn.cursor()
+    cursor.execute(sql)
+
+    candidatos=cursor.fetchall()
+    print(candidatos)
+
+    conn.commit()
+    return render_template('/recursoshumanos/usercandidatos/indexusercand.html', candidatos=candidatos)
+
+@app.route('/destroyusercand/<int:id>')
+def destroyusercand(id):
+    conn=mysql.connect()
+    cursor=conn.cursor()
+
+    cursor.execute("DELETE FROM `candidatos` WHERE Idcandidato =%s",(id))
+    conn.commit()
+    return redirect('/indexusercand')
+
+@app.route('/editusercand/<int:id>')
+def editusercand(id):
+    conn=mysql.connect()
+    cursor=conn.cursor()
+    cursor.execute("SELECT * from `candidatos` WHERE Idcandidato =%s",(id))
+    candidatos=cursor.fetchall()
+    print(candidatos)
+    sql="SELECT candidatos.Idcandidato, candidatos.Cedula, candidatos.Nombre, puestos.Nombre, candidatos.Ididioma, candidatos.Salariodeseado, candidatos.Recomendado FROM candidatos INNER JOIN puestos on candidatos.Idpuesto = puestos.Idpuesto;" 
+    sql2="SELECT * FROM `puestos` WHERE estado='Activo'"
+    sql3="SELECT * FROM `competencias` WHERE estado='Activo'"
+    sql4="SELECT * FROM `capacitaciones`"
+    sql5="SELECT * FROM `idiomas` WHERE estado='Activo'"
+
+    cursor=conn.connect()
+    cursor=conn.cursor(DictCursor)
+    cursor2=conn.cursor(DictCursor)
+    cursor3=conn.cursor(DictCursor)
+    cursor4=conn.cursor(DictCursor)
+    cursor5=conn.cursor(DictCursor)
+
+    cursor.execute(sql)
+    cursor2.execute(sql2)
+    cursor3.execute(sql3)
+    cursor4.execute(sql4)
+    cursor5.execute(sql5)
+
+    candidato=cursor.fetchall()
+    puestos=cursor2.fetchall()
+    competencias=cursor3.fetchall()
+    capacitaciones=cursor4.fetchall()
+    idiomas=cursor5.fetchall()
+    conn.commit()
+    return render_template('/recursoshumanos/usercandidatos/editcand.html',candidatos=candidatos, candidato = candidato, puestos = puestos, competencias=competencias, capacitaciones=capacitaciones, idiomas=idiomas)
+
+@app.route('/updateusercand', methods=['POST'])
+def updateusercand():
+    _Cedula=request.form['txtCedula']
+    _Nombre=request.form['txtNombre']
+    _puesto=request.form['txtpuesto']
+    _idioma=request.form.getlist('txtidioma')
+    _Competencia=request.form.getlist('txtcompetencia')
+    _capacitaciones=request.form.getlist('txtcapacitaciones')    
+    _Salariodeseado=request.form['txtSalariodeseado']
+    _Recomendado=request.form['txtRecomendado']
+    
+    conn=mysql.connect()
+    cursor=conn.cursor()
+
+    if _Nombre=='' or _Cedula=='' or _Salariodeseado=='':
+        flash('Recuerda llenar los datos de los campos')
+        return redirect(url_for('createcand'))
+
+    cursor.execute("SELECT `Cedula` FROM `candidatos`WHERE Cedula='"+_Cedula+"';")
+    count=cursor.rowcount
+    if count==1:
+        flash('La cedula insertada ya se encuentra registrada')
+        return redirect(url_for('createcand'))
+            
+    id=request.form['txtID']
+    sql="UPDATE `candidatos` SET `Cedula`=%s, `Nombre`=%s, `Idpuesto`=%s, `Ididioma`=%s, `Idcompetencia`=%s, `Idcapacitacion`=%s,`Salariodeseado`=%s,`Recomendado`=%s WHERE Idcandidato=%s;"
+   
+    a = _Competencia
+    listacompetencia = ' '.join(map(str, a))
+    
+    b = _idioma
+    listaidioma = ' '.join(map(str, b))
+
+    c = _capacitaciones
+    listacapacitaciones = ' '.join(map(str, c))
+
+    
+    datos=(_Cedula, _Nombre, _puesto, listaidioma, listacompetencia, listacapacitaciones, _Salariodeseado,_Recomendado ,id)
+    cursor=conn.cursor(DictCursor)
+    cursor.execute(sql,datos)
+    conn.commit()
+
+    return redirect('/indexusercand')
+
+@app.route('/createusercand')
+def createusercand():
+    sql="SELECT * FROM `puestos` WHERE estado='Activo'"
+    sql2="SELECT * FROM `competencias` WHERE estado='Activo'"
+    sql3="SELECT * FROM `idiomas` WHERE estado='Activo'"
+    sql4="SELECT * FROM `capacitaciones`"
+    sql5="SELECT * FROM `experiencialaboral`"
+
+    conn=mysql.connect()
+    cursor=conn.connect()
+
+    cursor=conn.cursor(DictCursor)
+    cursor2=conn.cursor(DictCursor)
+    cursor3=conn.cursor(DictCursor)
+    cursor4=conn.cursor(DictCursor)
+    cursor5=conn.cursor(DictCursor)
+
+
+    cursor.execute(sql)
+    cursor2.execute(sql2)
+    cursor3.execute(sql3)
+    cursor4.execute(sql4)
+    cursor5.execute(sql5)
+
+
+    puestos=cursor.fetchall()
+    competencias=cursor2.fetchall()
+    idiomas=cursor3.fetchall()
+    capacitaciones=cursor4.fetchall()
+    experiencia=cursor5.fetchall()
+    conn.commit()
+    return render_template ('recursoshumanos/usercandidatos/createusercand.html', puestos = puestos, competencias=competencias, idiomas=idiomas, capacitaciones=capacitaciones, experiencia=experiencia)
+
+@app.route('/storeusercand', methods=['POST', 'GET'])
+def storeusercand():
+ if request.method == 'POST':   
+    singup=request.form
+    _Cedula=singup['txtCedula']
+    _Nombre=request.form['txtNombre']
+    _puesto=request.form['txtpuesto']
+    _idioma=request.form.getlist('txtidioma')
+    _Salariodeseado=request.form['txtSalariodeseado']
+    _Competencia=request.form.getlist('txtCompetencia')
+    _capacitaciones=request.form.getlist('txtcapacitaciones')
+    _experiencia=request.form.getlist('txtexperiencia')
+    _Recomendado=request.form['txtRecomendado']
+
+    conn=mysql.connect()
+    cursor=conn.cursor()
+
+    if _Nombre=='' or _Cedula=='' or _Salariodeseado=='':
+        flash('Recuerda llenar los datos de los campos')
+        return redirect(url_for('createcand'))
+
+    cursor.execute("SELECT `Cedula` FROM `candidatos`WHERE Cedula='"+_Cedula+"';")
+    count=cursor.rowcount
+    if count==1:
+        flash('La cedula insertada ya se encuentra registrada')
+        return redirect(url_for('createcand'))
+            
+
+    sql="INSERT INTO `candidatos` (`Idcandidato`,`Cedula`,`Nombre`,`Idpuesto`,`Ididioma`,`Salariodeseado`, `Idcompetencia`,`Idcapacitacion`,`Idexperiencia`,`Recomendado`) VALUES (NULL, %s, %s, %s, %s, %s, %s, %s, %s, %s);"
+
+    a = _Competencia
+    listacompetencia = ' '.join(map(str, a))
+    
+    b = _idioma
+    listaidioma = ' '.join(map(str, b))
+
+    c = _capacitaciones
+    listacapacitaciones = ' '.join(map(str, c))
+
+    d = _experiencia
+    listaexperiencia = ' '.join(map(str, d))
+
+    datos=(_Cedula, _Nombre, _puesto, listaidioma, _Salariodeseado, listacompetencia, listacapacitaciones, listaexperiencia, _Recomendado)
+    cursor=conn.cursor(DictCursor)
+    cursor.execute(sql,datos)
+    conn.commit()
+    conn.close()
+    return redirect('/indexcand')
+
+#CRUD DE EXPERIENCIA LABORAL (usuario: candidato)
+
+@app.route('/indexuserexpe')
+def indexuserexpe():
+    sql="SELECT * FROM `experiencialaboral`;"
+    conn=mysql.connect()
+    cursor=conn.cursor()
+    cursor.execute(sql)
+
+    experiencialaboral=cursor.fetchall()
+    print(experiencialaboral)
+
+    conn.commit()
+    return render_template('/recursoshumanos/userexperiencia/indexuserexpe.html', experiencialaboral=experiencialaboral)
+
+@app.route('/destroyuserexpe/<int:id>')
+def destroyuserexpe(id):
+    conn=mysql.connect()
+    cursor=conn.cursor()
+
+    cursor.execute("DELETE FROM `experiencialaboral` WHERE Idexperiencia =%s",(id))
+    conn.commit()
+    return redirect('/indexuserexpe')
+
+@app.route('/edituserexpe/<int:id>')
+def edituserexpe(id):
+    conn=mysql.connect()
+    cursor=conn.cursor()
+    cursor.execute("SELECT * from `experiencialaboral` WHERE Idexperiencia =%s",(id))
+    experiencialaboral=cursor.fetchall()
+    print(experiencialaboral)
+    conn.commit()
+    return render_template('recursoshumanos/userexperiencia/edituserexpe.html',experiencialaboral=experiencialaboral)
+
+@app.route('/updateuserexpe', methods=['POST'])
+def updateuserexpe():
+    _Empresa=request.form['txtEmpresa']
+    _Puesto=request.form['txtPuesto']
+    _Fechadesde=request.form['txtFechadesde']
+    _Fechahasta=request.form['txtFechahasta']
+    _Salario=request.form['txtSalario']
+
+    id=request.form['txtID']
+    sql="UPDATE `experiencialaboral` SET `Empresa`=%s, `Puesto`=%s, `Fechadesde`=%s, `Fechahasta`=%s, `Salario`=%s WHERE Idexperiencia=%s;"
+
+    datos=(_Empresa, _Puesto, _Fechadesde, _Fechahasta, _Salario,id)
+    conn=mysql.connect() 
+    cursor=conn.cursor()
+    cursor.execute(sql,datos)
+    conn.commit()
+
+    return redirect('/indexuserexpe')
+
+@app.route('/createuserexpe')
+def createuserexpe():
+    return render_template ('recursoshumanos/userexperiencia/createuserexpe.html')
+
+@app.route('/storeuserexpe', methods=['POST'])
+def storeuserexpe():
+    _Empresa=request.form['txtEmpresa']
+    _Puesto=request.form['txtPuesto']
+    _Fechadesde=request.form['txtFechadesde']
+    _Fechahasta=request.form['txtFechahasta']
+    _Salario=request.form['txtSalario']
+
+    if _Empresa=='' or _Puesto=='' or _Salario=='':
+        flash('Recuerda llenar los datos de los campos')
+        return redirect(url_for('createuserexpe'))
+        
+    sql="INSERT INTO `experiencialaboral` (`Idexperiencia`, `Empresa`, `Puesto`, `Fechadesde`, `Fechahasta`, `Salario`) VALUES (NULL, %s, %s, %s, %s, %s);"
+
+    datos=(_Empresa, _Puesto, _Fechadesde, _Fechahasta, _Salario)
+    conn=mysql.connect()
+    cursor=conn.cursor()
+    cursor.execute(sql,datos)
+    conn.commit()
+    return redirect('/indexuserexpe')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
