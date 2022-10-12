@@ -472,7 +472,7 @@ def download_report():
   sh = workbook.add_sheet('Employee Report')
    
   #add headers
-  sh.write(0, 0, 'Emp Id')
+  sh.write(0, 0, 'ID')
   sh.write(0, 1, 'Emp First Name')
   sh.write(0, 2, 'Emp Last Name')
   sh.write(0, 3, '1')
