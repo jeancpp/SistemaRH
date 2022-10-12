@@ -333,12 +333,6 @@ def updatecand():
     if _Nombre=='' or _Cedula=='' or _Salariodeseado=='':
         flash('Recuerda llenar los datos de los campos')
         return redirect(url_for('createcand'))
-
-    cursor.execute("SELECT `Cedula` FROM `candidatos`WHERE Cedula='"+_Cedula+"';")
-    count=cursor.rowcount
-    if count==1:
-        flash('La cedula insertada ya se encuentra registrada')
-        return redirect(url_for('createcand'))
             
     id=request.form['txtID']
     sql="UPDATE `candidatos` SET `Cedula`=%s, `Nombre`=%s, `Idpuesto`=%s, `Ididioma`=%s, `Idcompetencia`=%s, `Idcapacitacion`=%s,`Salariodeseado`=%s,`Recomendado`=%s WHERE Idcandidato=%s;"

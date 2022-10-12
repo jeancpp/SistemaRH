@@ -13,7 +13,7 @@
                 <p class="card-text">
                     <div class="form-group">
                         <label for="txtCedula">Cedula</label>
-                        <input class="form-control"  value="{{ candidato[1] }}"  type="text" name="txtCedula" id="txtCedula">
+                        <input class="form-control"  value="{{ candidato[1] }}"  type="text" name="txtCedula" id="txtCedula" minlength="11" maxlength="11">
                     </div>
                     <input  value="{{ candidato[0] }}"  type="hidden" name="txtID" id="txtID">
                     <br>
