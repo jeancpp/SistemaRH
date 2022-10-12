@@ -1,0 +1,65 @@
+{% include 'header.html' %}
+
+{% for puesto in puestos %}
+<br><br>
+    <form method="post" action="/updatepuesto" enctype="multipart/form-data">
+
+        <div class="card">
+            <div class="card-header">
+                Editar puesto
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Datos del puesto</h5>
+                <p class="card-text">
+                    <div class="form-group">
+                        <label for="txtNombre">Nombre</label>
+                        <input class="form-control"  value="{{ puesto[1] }}"  type="text" name="txtNombre" id="txtNombre">
+                    </div>
+                    <input  value="{{ puesto[0] }}"  type="hidden" name="txtID" id="txtID">
+                    <br>
+                    <div class="form-group">
+                        <label for="txtRiesgo">Riesgo</label>
+                        <select class="form-control" id="txtRiesgo" name="txtRiesgo" value="{{ puesto[2] }}">
+                            <option>Bajo</option>
+                            <option>Medio</option>
+                            <option>Alto</option>
+                          </select>          
+                    </div>    
+                    <br>
+                    <div class="form-group">
+                        <label for="txtDepartamento">Departamento</label>
+                        <select class="form-control" id="txtDepartamento" name="txtDepartamento" value="{{ puesto[3] }}" >
+                            {% for row in departamento %}
+                            <option value="{{row.Iddepartamento}}">{{row.Nombre}}</option>
+                            {%endfor%}
+                          </select>
+                       </div>          
+                    <br>
+                    <div class="form-group">
+                        <label for="txtSalariominimo">Salario minimo</label>
+                        <input class="form-control" type="text" value="{{ puesto[4] }}" name="txtSalariominimo" id="txtSalariominimo">
+                    </div>    
+                    <br>
+                    <div class="form-group">
+                        <label for="txtSalariomaximo">Salario maximo</label>
+                        <input class="form-control" type="text" value="{{ puesto[5] }}" name="txtSalariomaximo" id="txtSalariomaximo">
+                    </div>    
+                    <br>
+                    <div class="form-group">
+                        <label for="txtEstado">Estado</label>
+                        <select class="form-control" id="txtEstado" name="txtEstado" value="{{ puesto[6] }}">
+                            <option>Activo</option>
+                            <option>Inactivo</option>
+                          </select>        
+                    </div>    
+                    <br>
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-success" value="Actualizar">
+                        <a href="{{url_for('indexpuesto')}}" class="btn btn-primary">Regresar</a>
+                    </div>
+                </p>
+            </div>
+        </div>        
+    </form>
+{% endfor %}
+{% include 'footer.html' %}

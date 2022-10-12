@@ -1,0 +1,94 @@
+{% include 'header.html' %}
+
+
+{% with messages = get_flashed_messages() %}
+
+{% if messages%}
+<br>
+<div class="alert alert-danger" role="alert">
+{% for message in messages %}
+{{ message }}
+{%endfor%}
+</div>
+{% endif %}
+{% endwith %}
+<br> 
+<form method="post" action="/storecand" enctype="multipart/form-data">
+
+    <div class="card">
+        <div class="card-header">
+             Ingresar Candidato
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">Datos del candidato</h5>
+            <p class="card-text">
+    
+             <div class="form-group">
+                <label for="txtCedula">Cedula</label>
+                <input id="txtCedula" class="form-control" type="text" name="txtCedula" minlength="11" maxlength="11">
+             </div>
+            
+             <div class="form-group">
+                <label for="txtNombre">Nombre</label>
+                <input id="txtNombre" class="form-control" type="text" name="txtNombre">
+             </div>
+   
+             <div class="form-group">
+                <label for="txtpuesto">Puesto</label>
+                <select class="form-control selectpicker" id="txtpuesto" name="txtpuesto">
+                  <option selected disabled>Selecciona el puesto</option>
+                  {% for row in puestos %}
+                  <option value="{{row.Idpuesto}}">{{row.Nombre}}</option>
+                  {%endfor%}
+                </select>
+             </div>
+             <br>
+
+         <div class="form-group">
+            <label for="txtidioma">Selecciona tus idiomas</label><br>
+            {% for row in idiomas %}
+            <input id="txtidioma" type="checkbox" name="txtidioma" value="{{row.Nombre}}">  {{row.Nombre}}<br><br>
+            {%endfor%}
+         </div>
+
+         <div class="form-group">
+            <label for="txtCompetencia">Selecciona tus competencias</label><br>
+            {% for row in competencias %}
+            <input id="txtCompetencia" type="checkbox" name="txtCompetencia" value="{{row.Descripcion}}">  {{row.Descripcion}}<br><br>
+            {%endfor%}
+         </div>
+
+         <div class="form-group">
+            <label for="txtCompetencia">Selecciona tus capacitaciones</label><br>
+            {% for row in capacitaciones %}
+            <input id="txtcapacitaciones" type="checkbox" name="txtcapacitaciones" value="{{row.Descripcion}}">  {{row.Descripcion}}, {{row.Nivel}} en {{row.Institucion}}<br><br>
+            {%endfor%}
+         </div>
+
+         <div class="form-group">
+            <label for="txtexperiencia">Selecciona tus experiencias laborales</label><br>
+            {% for row in experiencia %}
+            <input id="txtexperiencia" type="checkbox" name="txtexperiencia" value="{{row.Puesto}} en {{row.Empresa}}">  {{row.Puesto}} en {{row.Empresa}} desde {{row.Fechadesde}} hasta {{row.Fechahasta}}<br><br>
+            {%endfor%}
+         </div>
+
+             <div class="form-group">
+                <label for="txtSalariodeseado">Salario Deseado</label>
+                <input id="txtSalariodeseado" class="form-control" type="text" name="txtSalariodeseado">
+             </div>
+
+             <div class="form-group">
+                <label for="txtRecomendado">Recomendado</label>
+                <input id="txtRecomendado" class="form-control" type="text" name="txtRecomendado">
+             </div>
+             
+            
+             <div class="form-group">
+                <input type="submit" class="btn btn-success" value="Agregar">
+                <a href="{{url_for('indexcand')}}" class="btn btn-primary">Regresar</a>
+             </div>
+            </p>
+        </div>
+    </div>
+</form>
+{% include 'footer.html' %} 

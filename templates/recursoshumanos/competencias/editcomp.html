@@ -1,0 +1,38 @@
+{% include 'header.html' %}
+
+{% for competencia in competencias %}
+<br><br>
+    <form method="post" action="/updatecomp" enctype="multipart/form-data">
+
+        <div class="card">
+            <div class="card-header">
+                Editar competencia
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Datos de la competencia</h5>
+                <p class="card-text">
+
+                    <div class="form-group">
+                        <label for="txtDescripcion">Descripcion</label>
+                        <input class="form-control"  value="{{ competencia[1] }}"  type="text" name="txtDescripcion" id="txtDescripcion">
+                    </div>
+                    <input  value="{{ competencia[0] }}"  type="hidden" name="txtID" id="txtID">
+                    <br>
+                    <div class="form-group">
+                        <label for="txtEstado">Estado</label>
+                        <select class="form-control" id="txtEstado" name="txtEstado" value="{{ competencia[2] }}">
+                            <option>Activo</option>
+                            <option>Inactivo</option>
+                          </select>        
+                    </div>    
+                    <br>
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-success" value="Actualizar">
+                        <a href="{{url_for('indexcomp')}}" class="btn btn-primary">Regresar</a>
+                    </div>
+                </p>
+            </div>
+        </div>        
+    </form>
+{% endfor %}
+{% include 'footer.html' %}

@@ -1,0 +1,56 @@
+{% include 'header.html' %}
+
+{% for capacitacion in capacitaciones %}
+<br><br>
+    <form method="post" action="/updatecapa" enctype="multipart/form-data">
+
+        <div class="card">
+            <div class="card-header">
+                Editar Capacitacion
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Datos de la Capacitacion</h5>
+                <p class="card-text">
+                    <div class="form-group">
+                        <label for="txtDescripcion">Descripcion</label>
+                        <input class="form-control"  value="{{ capacitacion[1] }}"  type="text" name="txtDescripcion" id="txtDescripcion">
+                    </div>
+                    <input  value="{{ capacitacion[0] }}"  type="hidden" name="txtID" id="txtID">
+                    <br>
+                    <div class="form-group">
+                        <label for="txtNivel">Nivel</label>
+                        <select class="form-control" id="txtNivel" name="txtNivel" value="{{ capacitacion[2] }}">
+                            <option selected disabled>Selecciona el nivel</option>
+                            <option>Grado</option>
+                            <option>Post-grado</option>
+                            <option>Maestria</option>
+                            <option>Doctorado</option>
+                            <option>Tecnico</option>
+                          </select>
+                    </div>    
+                    <br>
+                    <div class="form-group">
+                        <label for="txtFechadesde">Desde</label>
+                        <input type="date" value="{{ capacitacion[3] }}" name="txtFechadesde" id="txtFechadesde" class="form-control">
+                    </div>    
+                    <br>
+                    <div class="form-group">
+                        <label for="txtFechahasta">Hasta</label>
+                        <input type="date" value="{{ capacitacion[4] }}" name="txtFechahasta" id="txtFechahasta" class="form-control">
+                    </div>    
+                    <br>
+                    <div class="form-group">
+                        <label for="txtInstitucion">Institucion</label>
+                        <input type="text" value="{{ capacitacion[5] }}" name="txtInstitucion" id="txtInstitucion" class="form-control">
+                    </div>    
+                    <br>
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-success" value="Actualizar">
+                        <a href="{{url_for('indexcapa')}}" class="btn btn-primary">Regresar</a>
+                    </div>
+                </p>
+            </div>
+        </div>        
+    </form>
+{% endfor %}
+{% include 'footer.html' %}

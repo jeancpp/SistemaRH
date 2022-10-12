@@ -1,0 +1,33 @@
+{% include 'header.html' %}
+<br> 
+<a href="{{url_for('createcomp')}}" class="btn btn-success">
+Ingresar nueva competencia
+
+</a>
+<br>
+<br>
+    <table class="table table-light">
+        <thead class="thead-light">
+            <tr>
+                <th>#</th>
+                <th>Descripcion</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for competencia in competencias %}
+            <tr>
+                <td>{{competencia[0] }}</td>
+                <td>{{competencia[1] }}</td>
+                <td>{{competencia[2] }}</td>
+                <td><a href="/editcomp/{{competencia[0]}}" class="btn btn-warning">Editar</a> | 
+                    <a href="/destroycomp/{{competencia[0]}}" class="btn btn-danger" onclick="return confirm('Desea borrar la competencia?')">Eliminar</a>
+                    </td>
+            </tr>
+            {% endfor %}
+
+            
+        </tbody>
+    </table>
+    {% include 'footer.html' %}

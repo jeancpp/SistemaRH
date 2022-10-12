@@ -1,0 +1,61 @@
+{% include 'header.html' %}
+{% with messages = get_flashed_messages() %}
+
+{% if messages%}
+<br>
+<div class="alert alert-danger" role="alert">
+{% for message in messages %}
+{{ message }}
+{%endfor%}
+</div>
+{% endif %}
+{% endwith %}
+
+<br> 
+<form method="post" action="/storeexpe" enctype="multipart/form-data">
+
+    <div class="card">
+        <div class="card-header">
+             Ingresar experiencia
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">Datos de la experiencia</h5>
+            <p class="card-text">
+    
+             <div class="form-group">
+                <label for="txtEmpresa">Empresa</label>
+                <input id="txtEmpresa" class="form-control" type="text" name="txtEmpresa">
+             </div>
+            
+             <div class="form-group">
+                <label for="txtPuesto">Puesto</label>
+                <input id="txtPuesto" class="form-control" type="text" name="txtPuesto">
+             </div>
+
+             <div class="form-group">
+                <label for="txtFechadesde">Desde</label>
+                <input id="txtFechadesde" class="form-control" type="date" name="txtFechadesde">
+             </div>
+
+             <div class="form-group">
+                <label for="txtFechahasta">Hasta</label>
+                <input id="txtFechahasta" class="form-control" type="date" name="txtFechahasta">
+             </div>
+
+             <div class="form-group">
+                <label for="txtSalario">Salario</label>
+                <input id="txtSalario" class="form-control" type="text" name="txtSalario">
+             </div>
+                
+             <div class="form-group">
+                <input type="submit" class="btn btn-success" value="Agregar">
+                <a href="{{url_for('indexexpe')}}" class="btn btn-primary">Regresar</a>
+             </div>
+
+
+            </p>
+        </div>
+    </div>
+    
+</form>
+{% include 'footer.html' %} 

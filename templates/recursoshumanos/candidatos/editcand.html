@@ -1,0 +1,76 @@
+{% include 'header.html' %}
+
+{% for candidato in candidatos %}
+<br><br>
+    <form method="post" action="/updatecand" enctype="multipart/form-data">
+
+        <div class="card">
+            <div class="card-header">
+                Editar Candidato
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Datos del candidato</h5>
+                <p class="card-text">
+                    <div class="form-group">
+                        <label for="txtCedula">Cedula</label>
+                        <input class="form-control"  value="{{ candidato[1] }}"  type="text" name="txtCedula" id="txtCedula">
+                    </div>
+                    <input  value="{{ candidato[0] }}"  type="hidden" name="txtID" id="txtID">
+                    <br>
+                    <div class="form-group">
+                        <label for="txtNombre">Nombre</label>
+                        <input type="text" class="form-control" value="{{ candidato[2] }}" name="txtNombre" id="txtNombre">
+                    </div>    
+                    <br>
+                    <div class="form-group">
+                        <label for="txtpuesto">Puesto</label>
+                        <select class="form-control" id="txtpuesto" name="txtpuesto" value="{{ candidato[3] }}" >
+                            {% for row in puestos %}
+                            <option value="{{row.Idpuesto}}">{{row.Nombre}}</option>
+                            {%endfor%}
+                          </select>
+                    </div>    
+                    <br>
+
+                    <div class="form-group">
+                        <label for="txtcompetencia">Selecciona tus idiomas</label><br>
+                        {% for row in idiomas %}                        
+                        <input id="txtidioma" type="checkbox" name="txtidioma" value="{{ row.Nombre }}">  {{row.Nombre}}<br><br>
+                        {%endfor%}
+                     </div>
+
+                    <div class="form-group">
+                        <label for="txtcompetencia">Selecciona tus competencias</label><br>
+                        {% for row in competencias %}                        
+                        <input id="txtcompetencia" type="checkbox" name="txtcompetencia" value="{{ row.Descripcion }}">  {{row.Descripcion}}<br><br>
+                        {%endfor%}
+                     </div>
+                     
+                     <div class="form-group">
+                        <label for="txtCompetencia">Selecciona tus capacitaciones</label><br>
+                        {% for row in capacitaciones %}
+                        <input id="txtcapacitaciones" type="checkbox" name="txtcapacitaciones" value="{{ row.Descripcion }}">  {{row.Descripcion}}, {{row.Nivel}} en {{row.Institucion}}<br><br>
+                        {%endfor%}
+                     </div>
+
+
+                    <div class="form-group">
+                        <label for="txtSalariodeseado">Salario deseado</label>
+                        <input type="text" class="form-control"  value="{{ candidato[5] }}" name="txtSalariodeseado" id="txtSalariodeseado">
+                    </div>    
+                    <br>
+                    <div class="form-group">
+                        <label for="txtRecomendado">Recomendado</label>
+                        <input type="text" class="form-control"  value="{{ candidato[9] }}" name="txtRecomendado" id="txtRecomendado">
+                    </div>    
+                    <br>
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-success" value="Actualizar">
+                        <a href="{{url_for('indexcand')}}" class="btn btn-primary">Regresar</a>
+                    </div>
+                </p>
+            </div>
+        </div>        
+    </form>
+{% endfor %}
+{% include 'footer.html' %}

@@ -1,0 +1,40 @@
+{% include 'header.html' %}
+<br> 
+<a href="{{url_for('createpuesto')}}" class="btn btn-success">
+Ingresar nuevo puesto
+
+</a>
+<br>
+<br>
+    <table class="table table-light">
+        <thead class="thead-light">
+            <tr>
+                <th>#</th>
+                <th>Nombre</th>
+                <th>Riesgo</th>
+                <th>Departamento</th>
+                <th>Salario minimo</th>
+                <th>Salario maximo</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for puesto in puestos %}
+            <tr>
+                <td>{{puesto[0] }}</td>
+                <td>{{puesto[1] }}</td>
+                <td>{{puesto[2] }}</td>
+                <td>{{puesto[3] }}</td>
+                <td>{{puesto[4] }}</td>
+                <td>{{puesto[5] }}</td>
+                <td>{{puesto[6] }}</td>
+                <td><a href="/editpuesto/{{puesto[0]}}" class="btn btn-warning">Editar</a> | 
+                    <a href="/destroypuesto/{{puesto[0]}}" class="btn btn-danger" onclick="return confirm('Desea borrar el puesto?')">Eliminar</a>
+                    </td>
+            </tr>
+            {% endfor %}
+            
+        </tbody>
+    </table>
+    {% include 'footer.html' %}

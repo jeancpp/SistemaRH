@@ -1,0 +1,38 @@
+{% include 'header.html' %}
+<br> 
+<a href="{{url_for('createexpe')}}" class="btn btn-success">
+Ingresar nueva experiencia
+
+</a>
+<br>
+<br>
+    <table class="table table-light">
+        <thead class="thead-light">
+            <tr>
+                <th>#</th>
+                <th>Empresa</th>
+                <th>Puesto</th>
+                <th>Desde</th>
+                <th>Hasta</th>
+                <th>Salario</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for experiencia in experiencialaboral %}
+            <tr>
+                <td>{{experiencia[0] }}</td>
+                <td>{{experiencia[1] }}</td>
+                <td>{{experiencia[2] }}</td>
+                <td>{{experiencia[3] }}</td>
+                <td>{{experiencia[4] }}</td>
+                <td>{{experiencia[5] }}</td>
+                <td><a href="/editexpe/{{experiencia[0]}}" class="btn btn-warning">Editar</a> | 
+                    <a href="/destroyexpe/{{experiencia[0]}}" class="btn btn-danger" onclick="return confirm('Desea borrar la experiencia?')">Eliminar</a>
+                    </td>
+            </tr>
+            {% endfor %}
+            
+        </tbody>
+    </table>
+    {% include 'footer.html' %}

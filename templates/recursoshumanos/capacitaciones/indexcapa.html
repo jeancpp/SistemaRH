@@ -1,0 +1,39 @@
+{% include 'header.html' %}
+<br> 
+<a href="{{url_for('createcapa')}}" class="btn btn-success">
+Ingresar nueva capacitacion
+
+</a>
+<br>
+<br>
+    <table class="table table-light">
+        <thead class="thead-light">
+            <tr>
+                <th>#</th>
+                <th>Descripcion</th>
+                <th>Nivel</th>
+                <th>Desde</th>
+                <th>Hasta</th>
+                <th>Institucion</th>
+                <th>Acciones</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            {% for capacitacion in capacitaciones %}
+            <tr>
+                <td>{{capacitacion[0] }}</td>
+                <td>{{capacitacion[1] }}</td>
+                <td>{{capacitacion[2] }}</td>
+                <td>{{capacitacion[3] }}</td>
+                <td>{{capacitacion[4] }}</td>
+                <td>{{capacitacion[5] }}</td>
+                <td><a href="/editcapa/{{capacitacion[0]}}" class="btn btn-warning">Editar</a> | 
+                    <a href="/destroycapa/{{capacitacion[0]}}" class="btn btn-danger" onclick="return confirm('Desea borrar la capacitacion?')">Eliminar</a>
+                    </td>
+            </tr>
+            {% endfor %}
+            
+        </tbody>
+    </table>
+    {% include 'footer.html' %}

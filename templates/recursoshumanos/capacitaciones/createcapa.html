@@ -1,0 +1,65 @@
+{% include 'header.html' %}
+{% with messages = get_flashed_messages() %}
+
+{% if messages%}
+<br>
+<div class="alert alert-danger" role="alert">
+{% for message in messages %}
+{{ message }}
+{%endfor%}
+</div>
+{% endif %}
+{% endwith %}
+
+<br> 
+<form method="post" action="/storecapa" enctype="multipart/form-data">
+
+    <div class="card">
+        <div class="card-header">
+             Ingresar capacitacion
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">Datos de la capacitacion</h5>
+            <p class="card-text">
+    
+             <div class="form-group">
+                <label for="txtDescripcion">Descripcion</label>
+                <input id="txtDescripcion" class="form-control" type="text" name="txtDescripcion">
+             </div>
+            
+             <div class="form-group">
+               <label for="txtNivel">Nivel</label>
+               <select class="form-control" id="txtNivel" name="txtNivel">
+                 <option selected disabled>Selecciona el nivel</option>
+                 <option>Grado</option>
+                 <option>Post-grado</option>
+                 <option>Maestria</option>
+                 <option>Doctorado</option>
+                 <option>Tecnico</option>
+               </select>
+            </div>
+
+             <div class="form-group">
+                <label for="txtFechadesde">Desde</label>
+                <input id="txtFechadesde" class="form-control" type="date" name="txtFechadesde">
+             </div>
+
+             <div class="form-group">
+                <label for="txtFechahasta">Hasta</label>
+                <input id="txtFechahasta" class="form-control" type="date" name="txtFechahasta">
+             </div>
+
+             <div class="form-group">
+                <label for="txtInstitucion">Institucion</label>
+                <input id="txtInstitucion" class="form-control" type="text" name="txtInstitucion">
+             </div>
+             <div class="form-group">
+                <input type="submit" class="btn btn-success" value="Agregar">
+                <a href="{{url_for('indexcapa')}}" class="btn btn-primary">Regresar</a>
+             </div>
+            </p>
+        </div>
+    </div>
+    
+</form>
+{% include 'footer.html' %} 

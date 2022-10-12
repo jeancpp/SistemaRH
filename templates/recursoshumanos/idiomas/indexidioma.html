@@ -1,0 +1,32 @@
+{% include 'header.html' %}
+<br> 
+<a href="{{url_for('createidioma')}}" class="btn btn-success">
+Ingresar nuevo idioma
+
+</a>
+<br>
+<br>
+    <table class="table table-light">
+        <thead class="thead-light">
+            <tr>
+                <th>#</th>
+                <th>Nombre</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for idioma in idiomas %}
+            <tr>
+                <td>{{idioma[0] }}</td>
+                <td>{{idioma[1] }}</td>
+                <td>{{idioma[2] }}</td>
+                <td><a href="/editidioma/{{idioma[0]}}" class="btn btn-warning">Editar</a> | 
+                    <a href="/destroyidioma/{{idioma[0]}}" class="btn btn-danger" onclick="return confirm('Desea borrar el idioma?')">Eliminar</a>
+                    </td>
+            </tr>
+            {% endfor %}
+            
+        </tbody>
+    </table>
+    {% include 'footer.html' %}

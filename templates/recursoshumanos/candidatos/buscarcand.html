@@ -1,0 +1,55 @@
+{% include 'header.html' %}
+<br> 
+<a href="{{url_for('createcand')}}" class="btn btn-success">
+Ingresar nuevo candidato
+
+</a>
+<br>
+<br>
+    <table id="data" class="table table-striped table-bordered">
+        <thead class="thead-light">
+            <tr>
+                <th>#</th>
+                <th>Cedula</th>
+                <th>Nombre</th>
+                <th>Puesto</th>
+                <th>Competencias</th>
+                <th>Capacitaciones</th>
+                <th>Salario deseado</th>
+                <th>Recomendado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for candidato in candidatos %}
+            <tr>
+                <td>{{candidato[0] }}</td>
+                <td>{{candidato[1] }}</td>
+                <td>{{candidato[2] }}</td>
+                <td>{{candidato[3] }}</td>
+                <td>{{candidato[4] }}</td>
+                <td>{{candidato[5] }}</td>
+                <td>{{candidato[6] }}</td>
+                <td>{{candidato[7] }}</td>
+
+            </tr>
+            {% endfor %}
+            
+        </tbody>
+    </table>
+    {% include 'footer.html' %}
+
+    <script>
+        $(document).ready(function () {
+          $('#data').DataTable({
+            columns: [
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,]
+          });
+        });
+      </script>

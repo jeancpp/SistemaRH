@@ -1,0 +1,101 @@
+{% include 'header.html' %}
+<br> 
+<br>
+    <input type="text" name="From" id="From" class="form-control col-md-2" placeholder="From Date"/>
+    <input type="text" name="to" id="to" class="form-control col-md-2" placeholder="To Date"/>
+    <input type="button" name="range" id="range" value="Range" class="btn btn-success"/>
+    <a href="{{ url_for('.download_report') }}" class="btn btn-info" id="descargar">Descargar reporte</a>
+    <div class="clearfix"></div>
+
+    <br>
+<h3>Empleados</h3>
+<br>
+<div id="reporte">
+    <table class="table table-light">
+        <thead class="thead-light">
+            <tr>
+                <th>#</th>
+                <th>Cedula</th>
+                <th>Nombre</th>
+                <th>Fecha Ingreso</th>
+                <th>Departamento</th>
+                <th>Puesto</th>
+                <th>Salario</th>
+                <th>Estado</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            {% for empleado in empleados %}
+            <tr>
+                <td>{{empleado[0] }}</td>
+                <td>{{empleado[1] }}</td>
+                <td>{{empleado[2] }}</td>
+                <td>{{empleado[3] }}</td>
+                <td>{{empleado[4] }}</td>
+                <td>{{empleado[5] }}</td>
+                <td>{{empleado[6] }}</td>
+                <td>{{empleado[7] }}</td>
+
+            </tr>
+            {% endfor %}
+            
+        </tbody>
+    </table>
+</div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js"></script>
+
+    <script>
+        $(document).ready(function(){
+            $.datepicker.setDefaults({
+                dateFormat: 'yy-mm-dd'
+            });
+
+            $(function(){
+                $("#From").datepicker();
+                $("#to").datepicker();
+            });
+
+            $('#range').click(function(){
+            var From = $('#From').val();
+            var to = $('#to').val();
+           
+        if(From != '' && to != '')
+        {
+            $.ajax({
+                url:"/range",
+                method:"POST",
+                data:{From:From, to:to},
+                success:function(data)
+                {
+                    $('#reporte').html(data);
+                    $('#reporte').append(data.htmlresponse);
+                }
+            });
+        }
+        else
+        {
+            alert("Completa correctamente ambas fechas");
+        }
+    });
+});
+    </script>
+    {% include 'footer.html' %}
+    <style type="text/css" media="screen">
+
+        #to {
+            margin-left: 220px;
+            margin-top: -37px;
+
+          }
+
+          #range {
+            margin-left: 420px;
+            margin-top: -66px;
+          }
+
+          #descargar {
+            margin-left: 40px;
+            margin-top: -65px;
+          }
+        </style>

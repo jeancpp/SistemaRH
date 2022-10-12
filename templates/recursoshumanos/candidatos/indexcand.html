@@ -1,0 +1,41 @@
+{% include 'header.html' %}
+<br> 
+<a href="{{url_for('createcand')}}" class="btn btn-success">Ingresar nuevo candidato</a>&nbsp;&nbsp;
+<a href="{{url_for('buscarcand')}}" class="btn btn-success">Busqueda de candidato</a>
+    
+
+<br>
+<br>
+    <table id="data" class="table table-striped table-bordered">
+        <thead class="thead-light">
+            <tr>
+                <th>#</th>
+                <th>Cedula</th>
+                <th>Nombre</th>
+                <th>Puesto</th>
+                <th>Competencias</th>
+                <th>Capacitaciones</th>
+                <th style="width: 15%">Salario deseado</th>
+                <th style="width: 30%">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for candidato in candidatos %}
+            <tr>
+                <td>{{candidato[0] }}</td>
+                <td>{{candidato[1] }}</td>
+                <td>{{candidato[2] }}</td>
+                <td>{{candidato[3] }}</td>
+                <td>{{candidato[4] }}</td>
+                <td>{{candidato[5] }}</td>
+                <td>{{candidato[6] }}</td>
+                <td><a href="/editcand/{{candidato[0]}}" class="btn btn-warning">Editar</a> | 
+                    <a href="/destroycand/{{candidato[0]}}" class="btn btn-danger" onclick="return confirm('Desea borrar el candidato?')">Eliminar</a> |
+                    <a href="/contratar/{{candidato[0]}}" class="btn btn-info" onclick="return confirm('Desea contratar al candidato?')">Contratar</a>
+                    </td>
+            </tr>
+            {% endfor %}
+            
+        </tbody>
+    </table>
+    {% include 'footer.html' %}

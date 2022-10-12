@@ -1,0 +1,52 @@
+{% include 'header.html' %}
+
+{% for experiencia in experiencialaboral %}
+<br><br>
+    <form method="post" action="/updateexpe" enctype="multipart/form-data">
+
+        <div class="card">
+            <div class="card-header">
+                Editar experiencia
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Datos de la experiencia</h5>
+                <p class="card-text">
+                    <div class="form-group">
+                        <label for="txtEmpresa">Empresa</label>
+                        <input class="form-control"  value="{{ experiencia[1] }}"  type="text" name="txtEmpresa" id="txtEmpresa">
+                    </div>
+                    <input  value="{{ experiencia[0] }}"  type="hidden" name="txtID" id="txtID">
+                    <br>
+
+                    <div class="form-group">
+                        <label for="txtPuesto">Puesto</label>
+                        <input class="form-control"  value="{{ experiencia[2] }}"  type="text" name="txtPuesto" id="txtPuesto">
+                    </div>
+                    <br>
+
+                    <div class="form-group">
+                        <label for="txtFechadesde">Desde</label>
+                        <input class="form-control" type="date" value="{{ experiencia[3] }}" name="txtFechadesde" id="txtFechadesde">
+                    </div>    
+                    <br>
+                    <div class="form-group">
+                        <label for="txtFechahasta">Hasta</label>
+                        <input class="form-control" type="date"  value="{{ experiencia[4] }}" name="txtFechahasta" id="txtFechahasta">
+                    </div>    
+                    <br>
+                    <div class="form-group">
+                        <label for="txtSalario">Salario</label>
+                        <input class="form-control" type="text" value="{{ experiencia[5] }}" name="txtSalario" id="txtSalario">
+                    </div>    
+                    <br>
+
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-success" value="Actualizar">
+                        <a href="{{url_for('indexexpe')}}" class="btn btn-primary">Regresar</a>
+                    </div>
+                </p>
+            </div>
+        </div>        
+    </form>
+{% endfor %}
+{% include 'footer.html' %}
